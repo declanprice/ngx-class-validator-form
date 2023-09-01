@@ -27,6 +27,7 @@ export const makeControl = (
   }
 
   if (validators?.minimum !== undefined) {
+    console.log("adding min validator");
     formControl.addValidators(Validators.min(validators.minimum));
   }
 

@@ -1,19 +1,14 @@
-import { Form, FormArray, FormGroup } from "@angular/forms";
+import { FormArray, FormGroup } from "@angular/forms";
 
-import { getMetadataStorage, MetadataStorage } from "class-validator";
-
-// @ts-ignore
-import { defaultMetadataStorage } from "class-transformer/cjs/storage";
-
-import { makeControl } from "./make-control";
-
-import { ValidationMetadata } from "class-validator/types/metadata/ValidationMetadata";
+import { makeControl } from "./makeControl";
 
 interface FormProperties {
   [propertyName: string]: {
-    type: "string" | "number" | "boolean" | "object" | "array";
+    type: "formControl" | "formGroup" | "formArray";
     minLength?: number;
     maxLength?: number;
+    maximum?: number;
+    minimum?: number;
     required?: boolean;
     properties?: FormProperties;
   };
@@ -22,7 +17,7 @@ interface FormProperties {
 export const makeFormFromProperties = (
   properties: FormProperties,
   data?: any
-) => {
+): FormGroup => {
   const formGroup = new FormGroup({});
 
   const addControlsToGroup = (
@@ -31,30 +26,29 @@ export const makeFormFromProperties = (
     data?: any
   ) => {
     for (const propertyName in properties) {
+      console.log(propertyName);
+
       const property = properties[propertyName];
 
-      if (
-        property.type === "string" ||
-        property.type === "number" ||
-        property.type === "boolean"
-      ) {
+      if (property.type === "formControl") {
         let controlValue = typeof data === "object" ? data[propertyName] : data;
 
         const control = makeControl(controlValue || undefined, {
           minLength: property.minLength,
           maxLength: property.maxLength,
+          maximum: property.maximum,
+          minimum: property.minimum,
           required: property.required,
         });
 
-        if (formGroup instanceof FormArray) {
-          formGroup.push(control);
-        } else {
-          formGroup.addControl(propertyName, control);
-        }
+        control.updateValueAndValidity();
+
+        formGroup.addControl(propertyName, control);
       }
 
-      if (
-        property.type === "object" &&
+      //
+      else if (
+        property.type === "formGroup" &&
         typeof property.properties === "object"
       ) {
         const nestedFormGroup = new FormGroup({});
@@ -69,8 +63,8 @@ export const makeFormFromProperties = (
       }
 
       // handle array of primitive types
-      if (
-        property.type === "array" &&
+      else if (
+        property.type === "formArray" &&
         typeof property.properties === "undefined"
       ) {
         const nestedFormArray = new FormArray<any>([]);
@@ -82,19 +76,24 @@ export const makeFormFromProperties = (
             const control = makeControl(arrayItem, {
               minLength: property.minLength,
               maxLength: property.maxLength,
+              maximum: property.maximum,
+              minimum: property.minimum,
               required: property.required,
             });
+
+            control.updateValueAndValidity();
 
             nestedFormArray.push(control);
           }
         }
 
+        formGroup.updateValueAndValidity();
         formGroup.addControl(propertyName, nestedFormArray);
       }
 
       // handle array of objects
-      if (
-        property.type === "array" &&
+      else if (
+        property.type === "formArray" &&
         typeof property.properties === "object"
       ) {
         const nestedFormArray = new FormArray<any>([]);
@@ -109,6 +108,7 @@ export const makeFormFromProperties = (
           }
         }
 
+        formGroup.updateValueAndValidity();
         formGroup.addControl(propertyName, nestedFormArray);
       }
     }
@@ -117,43 +117,4 @@ export const makeFormFromProperties = (
   addControlsToGroup(formGroup, properties, data);
 
   return formGroup;
-};
-
-// const validationMetadata = getMetadataStorage();
-//
-// const targetValidationMetadata =
-//     validationMetadata.getTargetValidationMetadatas(clazz, "", true, false);
-//
-// for (const metadata of targetValidationMetadata) {
-//   console.log(metadata);
-//
-//   // const constraint = validationMetadata.getTargetValidatorConstraints(
-//   //   metadata.constraintCls
-//   // );
-//   //
-//   // console.log("constraint", constraint);
-// }
-
-const getNestedValidationMetadata = (
-  metadataStorage: MetadataStorage,
-  metadata: ValidationMetadata
-): ValidationMetadata[] => {
-  try {
-    const reflectedTypeConstructor = defaultMetadataStorage._typeMetadatas
-      .get(metadata.target)
-      .get(metadata.propertyName).reflectedType;
-
-    const reflectedTypeMetadata = metadataStorage.getTargetValidationMetadatas(
-      reflectedTypeConstructor,
-      "",
-      true,
-      false
-    );
-
-    return reflectedTypeMetadata;
-  } catch (error) {
-    throw new Error(
-      "failed to get nested validation metadata, ensure you have applied @Type(() => NestedType) decorator"
-    );
-  }
 };

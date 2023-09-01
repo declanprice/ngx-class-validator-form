@@ -1,7 +1,7 @@
-import { makeControl } from "./make-control";
+import { makeControl } from "./makeControl";
 
 describe("makeControl()", () => {
-  it("should make FormControl with maxLength string validator", () => {
+  it("should make FormControl with [maxLength] validator", () => {
     const formControl = makeControl("hello", { maxLength: 3 });
     formControl.updateValueAndValidity();
     expect(formControl.errors).toBeTruthy();
@@ -11,7 +11,7 @@ describe("makeControl()", () => {
     });
   });
 
-  it("should make FormControl with [maxLength] validators", () => {
+  it("should make FormControl with [minLength] validators", () => {
     const formControl = makeControl("hello", { minLength: 10 });
     formControl.updateValueAndValidity();
     expect(formControl.errors).toBeTruthy();
@@ -21,14 +21,14 @@ describe("makeControl()", () => {
     });
   });
 
-  it("should make FormControl with [required] validators", () => {
+  it("should make FormControl with [required] validator", () => {
     const formControl = makeControl("", { required: true });
     formControl.updateValueAndValidity();
     expect(formControl.errors).toBeTruthy();
     expect(formControl.errors!["required"]).toEqual(true);
   });
 
-  it("should make FormControl with [minLength, required] validators", () => {
+  it("should make FormControl with [minLength, required] validator", () => {
     const formControl = makeControl("", { required: true, minLength: 5 });
     formControl.updateValueAndValidity();
     expect(formControl.errors).toBeTruthy();
