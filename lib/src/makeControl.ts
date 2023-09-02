@@ -1,6 +1,6 @@
 import { FormControl, Validators } from "@angular/forms";
 
-interface ValidatorOptions {
+export interface ValidatorOptions {
   required?: boolean;
   minimum?: number;
   maximum?: number;
@@ -27,7 +27,6 @@ export const makeControl = (
   }
 
   if (validators?.minimum !== undefined) {
-    console.log("adding min validator");
     formControl.addValidators(Validators.min(validators.minimum));
   }
 

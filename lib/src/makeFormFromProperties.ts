@@ -2,7 +2,7 @@ import { FormArray, FormGroup } from "@angular/forms";
 
 import { makeControl } from "./makeControl";
 
-interface FormProperties {
+export interface FormProperties {
   [propertyName: string]: {
     type: "formControl" | "formGroup" | "formArray";
     minLength?: number;
@@ -26,8 +26,6 @@ export const makeFormFromProperties = (
     data?: any
   ) => {
     for (const propertyName in properties) {
-      console.log(propertyName);
-
       const property = properties[propertyName];
 
       if (property.type === "formControl") {

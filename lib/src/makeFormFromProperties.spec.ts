@@ -277,7 +277,6 @@ describe("makeForm()", () => {
 
     const paymentMethod1 = paymentMethodControls.at(0);
     expect(paymentMethod1.valid).toEqual(true);
-    console.log(paymentMethod1?.errors);
 
     const paymentMethod2 = paymentMethodControls.at(1);
     expect(paymentMethod2.valid).toEqual(false);

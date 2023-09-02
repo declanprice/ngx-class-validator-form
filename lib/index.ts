@@ -1,2 +1,8 @@
-export { makeForm } from "./src/make-form";
-export { makeControl } from "./src/make-control";
+export {
+  makeFormFromProperties,
+  FormProperties,
+} from "./src/makeFormFromProperties";
+
+export { makeControl } from "./src/makeControl";
+
+export { makeForm } from "./src/makeForm";
