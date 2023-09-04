@@ -7,13 +7,12 @@ import {
   ZodNumber,
   ZodNumberDef,
   ZodObject,
+  ZodOptional,
   ZodString,
   ZodStringDef,
 } from "zod";
 
 import { ValidatorOptions } from "../../makeControl";
-
-import { ZodOptional } from "zod";
 
 export const zodToProperties = (zodSchema: ZodObject<any>): FormProperties => {
   const zodShape = zodSchema._def.shape();
@@ -53,11 +52,13 @@ export const zodToProperties = (zodSchema: ZodObject<any>): FormProperties => {
       }
     };
 
-    if (property instanceof ZodString) {
+    if (property._def.typeName === "ZodString") {
+      validators.required = true;
       parseStringDef(property._def);
     }
 
-    if (property instanceof ZodNumber) {
+    if (property._def.typeName === "ZodNumber") {
+      validators.required = true;
       parseNumberDef(property._def);
     }
 
@@ -77,8 +78,6 @@ export const zodToProperties = (zodSchema: ZodObject<any>): FormProperties => {
         zodProperty._def.typeName === "ZodBoolean" ||
         zodProperty._def.typeName === "ZodAny"
       ) {
-        console.log("i was called");
-
         formProperties[propertyName] = {
           type: "formControl",
           ...getValidators(zodProperty),

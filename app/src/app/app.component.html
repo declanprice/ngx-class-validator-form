@@ -1,14 +1,16 @@
-<form [formGroup]="registerCustomerForm" (ngSubmit)="registerCustomerForm.value">
+<form [formGroup]="registerCustomerForm" (ngSubmit)="submit(registerCustomerForm.value)">
 
-  <mat-form-field>
-    <mat-label>Username</mat-label>
-    <input matInput formControlName="username"/>
-  </mat-form-field>
+  <div formGroupName="user">
+    <mat-form-field>
+      <mat-label>Username</mat-label>
+      <input matInput formControlName="username"/>
+    </mat-form-field>
 
-  <mat-form-field>
-    <mat-label>Email</mat-label>
-    <input matInput formControlName="email"/>
-  </mat-form-field>
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email"/>
+    </mat-form-field>
+  </div>
 
   <button mat-raised-button type="submit" [disabled]="registerCustomerForm.invalid">Submits</button>
 </form>
