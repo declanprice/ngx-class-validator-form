@@ -1,13 +1,9 @@
-import { getClassSchema } from "joi-class-decorators";
-import { FormProperties } from "./makeFormFromProperties";
-import { ValidatorOptions } from "./makeControl";
+import { Schema } from "joi";
+import { FormProperties } from "../../makeFormFromProperties";
+import { ValidatorOptions } from "../../makeControl";
 
-export const convertJoiClassToProperties = (clazz: {
-  new (...properties: any): any;
-}): FormProperties => {
-  const rootSchema: any = getClassSchema(clazz);
-
-  if (rootSchema.type !== "object") {
+export const joiToProperties = (joiSchema: Schema): FormProperties => {
+  if (joiSchema.type !== "object") {
     throw new Error("can only convert classes with with @JoiSchema properties");
   }
 
@@ -46,7 +42,8 @@ export const convertJoiClassToProperties = (clazz: {
       if (
         objectSchema.type === "string" ||
         objectSchema.type === "number" ||
-        objectSchema.type === "boolean"
+        objectSchema.type === "boolean" ||
+        objectSchema.type === "any"
       ) {
         formProperties[objectKey] = {
           type: "formControl",
@@ -61,6 +58,7 @@ export const convertJoiClassToProperties = (clazz: {
         formProperties[objectKey] = {
           type: "formGroup",
           properties: nestedFormProperties,
+          required: objectSchema?._flags?.presence === "required",
         };
       }
 
@@ -70,6 +68,7 @@ export const convertJoiClassToProperties = (clazz: {
         if (items.length === 0) {
           formProperties[objectKey] = {
             type: "formArray",
+            required: objectSchema?._flags?.presence === "required",
           };
         }
 
@@ -79,7 +78,8 @@ export const convertJoiClassToProperties = (clazz: {
           if (
             nestedSchema.type === "string" ||
             nestedSchema.type === "number" ||
-            nestedSchema.type === "boolean"
+            nestedSchema.type === "boolean" ||
+            objectSchema.type === "any"
           ) {
             formProperties[objectKey] = {
               type: "formArray",
@@ -94,6 +94,7 @@ export const convertJoiClassToProperties = (clazz: {
             formProperties[objectKey] = {
               type: "formArray",
               properties: nestedFormProperties,
+              required: objectSchema?._flags?.presence === "required",
             };
           }
         }
@@ -101,7 +102,7 @@ export const convertJoiClassToProperties = (clazz: {
     }
   };
 
-  addToFormProperties(formProperties, rootSchema);
+  addToFormProperties(formProperties, joiSchema);
 
   return formProperties;
 };

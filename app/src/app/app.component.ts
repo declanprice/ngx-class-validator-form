@@ -1,16 +1,8 @@
 import { Component } from '@angular/core';
 
-import { makeForm } from '@declanprice/ngx-class-validator-form';
+import { makeZodForm } from '@declanprice/ngx-make-form';
 
-import { IsOptional, IsString } from 'class-validator';
-
-class RegisterCustomerCommand {
-  @IsString()
-  username!: string;
-
-  @IsString()
-  email!: string;
-}
+import { z } from 'zod';
 
 @Component({
   selector: 'app-root',
@@ -18,9 +10,12 @@ class RegisterCustomerCommand {
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'app';
-
-  registerCustomerForm = makeForm(RegisterCustomerCommand);
+  registerCustomerForm = makeZodForm(
+    z.object({
+      username: z.string(),
+      email: z.string(),
+    })
+  );
 
   constructor() {}
 }

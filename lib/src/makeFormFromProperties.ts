@@ -9,7 +9,7 @@ export interface FormProperties {
     maxLength?: number;
     maximum?: number;
     minimum?: number;
-    required?: boolean;
+    required: boolean;
     properties?: FormProperties;
   };
 }

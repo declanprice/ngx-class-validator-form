@@ -1,55 +1,30 @@
-import { JoiSchema } from "joi-class-decorators";
-
 import * as Joi from "joi";
 
-import { convertJoiClassToProperties } from "./convertJoiClassToProperties";
+import { joiToProperties } from "./joiToProperties";
 
-import { FormProperties } from "./makeFormFromProperties";
+import { FormProperties } from "../../makeFormFromProperties";
 
-describe("convertMetadataToProperties()", () => {
-  class Address {
-    @JoiSchema(Joi.string().required())
-    addressLine1!: string;
-  }
-
-  class PaymentMethod {
-    @JoiSchema(Joi.string().min(6).max(6).required())
-    sort!: string;
-
-    @JoiSchema(Joi.number().min(8).max(8).required())
-    account!: number;
-
-    @JoiSchema(Joi.array().items(Joi.number().required()).required())
-    ibans!: number[];
-  }
-
-  class Customer {
-    @JoiSchema(Joi.string().min(5).max(10).required())
-    name!: string;
-
-    @JoiSchema(Joi.string().optional())
-    dateOfBirth?: string;
-
-    @JoiSchema(Joi.number().min(0).max(120))
-    age!: number;
-
-    @JoiSchema(Joi.boolean().required())
-    isMember!: boolean;
-
-    @JoiSchema(Address, (schema) => schema.required())
-    address!: Address;
-
-    @JoiSchema(Joi.array().required())
-    skills!: string[];
-
-    @JoiSchema(
-      Joi.array().items(Joi.string().min(5).max(5).required()).required()
-    )
-    skills2!: string[];
-
-    @JoiSchema([PaymentMethod], (arraySchema) => arraySchema.required())
-    paymentMethods!: PaymentMethod[];
-  }
+describe("joiToProperties()", () => {
+  const schema = Joi.object({
+    name: Joi.string().min(5).max(10).required(),
+    dateOfBirth: Joi.string(),
+    age: Joi.number().min(0).max(120).required(),
+    isMember: Joi.boolean(),
+    address: Joi.object({
+      addressLine1: Joi.string().required(),
+    }),
+    skills: Joi.array().required(),
+    skills2: Joi.array()
+      .items(Joi.string().min(5).max(5).required())
+      .required(),
+    paymentMethods: Joi.array().items(
+      Joi.object({
+        sort: Joi.string().min(6).max(6).required(),
+        account: Joi.number().min(8).max(8).required(),
+        ibans: Joi.array().items(Joi.number().required()).required(),
+      })
+    ),
+  });
 
   it("should convert complex nested Customer metadata to valid FormProperties object", () => {
     const formProperties: FormProperties = {
@@ -67,11 +42,11 @@ describe("convertMetadataToProperties()", () => {
         type: "formControl",
         minimum: 0,
         maximum: 120,
-        required: false,
+        required: true,
       },
       isMember: {
         type: "formControl",
-        required: true,
+        required: false,
       },
       address: {
         type: "formGroup",
@@ -81,9 +56,11 @@ describe("convertMetadataToProperties()", () => {
             required: true,
           },
         },
+        required: false,
       },
       skills: {
         type: "formArray",
+        required: true,
       },
       skills2: {
         type: "formArray",
@@ -111,10 +88,11 @@ describe("convertMetadataToProperties()", () => {
             required: true,
           },
         },
+        required: false,
       },
     };
 
-    const properties = convertJoiClassToProperties(Customer);
+    const properties = joiToProperties(schema);
 
     expect(properties).toEqual(formProperties);
   });

@@ -9,33 +9,42 @@ describe("makeForm()", () => {
     const formGroup = makeFormFromProperties({
       name: {
         type: "formControl",
+        required: false,
       },
       age: {
         type: "formControl",
+        required: false,
       },
       address: {
         type: "formGroup",
         properties: {
           addressLine1: {
             type: "formControl",
+            required: false,
           },
         },
+        required: false,
       },
       skills: {
         type: "formArray",
         minLength: 3,
         maxLength: 50,
+        required: false,
       },
       paymentMethods: {
         type: "formArray",
+        required: false,
+
         properties: {
           sort: {
             type: "formControl",
             maxLength: 5,
+            required: false,
           },
           account: {
             type: "formControl",
             maxLength: 10,
+            required: false,
           },
         },
       },
@@ -65,34 +74,45 @@ describe("makeForm()", () => {
     const formGroup = makeFormFromProperties({
       customer: {
         type: "formGroup",
+        required: false,
+
         properties: {
           name: {
             type: "formControl",
+            required: false,
           },
           address: {
             type: "formGroup",
+            required: false,
+
             properties: {
               addressLine1: {
                 type: "formControl",
                 maxLength: 5,
+                required: false,
               },
               addressLine2: {
                 type: "formControl",
+                required: false,
               },
               other: {
                 type: "formArray",
+                required: false,
               },
               otherGroup: {
                 type: "formArray",
                 properties: {
                   otherProperty: {
                     type: "formControl",
+                    required: false,
                   },
                 },
+                required: false,
               },
             },
           },
           skills: {
+            required: false,
             type: "formArray",
           },
         },
@@ -146,28 +166,40 @@ describe("makeForm()", () => {
       {
         customer: {
           type: "formGroup",
+          required: false,
+
           properties: {
             name: {
               type: "formControl",
+              required: false,
             },
             address: {
               type: "formGroup",
+              required: false,
+
               properties: {
                 addressLine1: {
                   type: "formControl",
+                  required: false,
+
                   maxLength: 5,
                 },
                 addressLine2: {
                   type: "formControl",
+                  required: false,
                 },
                 other: {
                   type: "formArray",
+                  required: false,
                 },
                 otherGroup: {
                   type: "formArray",
+                  required: false,
+
                   properties: {
                     otherProperty: {
                       type: "formControl",
+                      required: false,
                     },
                   },
                 },
@@ -175,6 +207,7 @@ describe("makeForm()", () => {
             },
             skills: {
               type: "formArray",
+              required: false,
             },
           },
         },
@@ -207,28 +240,34 @@ describe("makeForm()", () => {
       {
         address: {
           type: "formGroup",
+          required: false,
           properties: {
             addressLine1: {
               type: "formControl",
+              required: false,
               maxLength: 5,
             },
           },
         },
         skills: {
           type: "formArray",
+          required: false,
           minLength: 5,
           maximum: 50,
         },
         paymentMethods: {
           type: "formArray",
+          required: false,
           properties: {
             sort: {
               type: "formControl",
+              required: false,
               minLength: 6,
               maxLength: 6,
             },
             account: {
               type: "formControl",
+              required: false,
               minimum: 100000,
               maximum: 999999,
             },
@@ -303,12 +342,16 @@ describe("makeForm()", () => {
         },
         paymentMethods: {
           type: "formArray",
+          required: false,
+
           properties: {
             sort: {
               type: "formControl",
+              required: false,
             },
             account: {
               type: "formControl",
+              required: false,
             },
           },
         },
@@ -354,12 +397,15 @@ describe("makeForm()", () => {
         },
         paymentMethods: {
           type: "formArray",
+          required: false,
           properties: {
             sort: {
               type: "formControl",
+              required: false,
             },
             account: {
               type: "formControl",
+              required: false,
             },
           },
         },
@@ -389,6 +435,7 @@ describe("makeForm()", () => {
       {
         paymentMethods: {
           type: "formControl",
+          required: false,
         },
       },
       {
@@ -452,6 +499,7 @@ describe("makeForm()", () => {
     const formGroup = makeFormFromProperties({
       name: {
         type: "formControl",
+        required: false,
         minLength: 5,
       },
     });
@@ -471,6 +519,7 @@ describe("makeForm()", () => {
     const formGroup = makeFormFromProperties({
       name: {
         type: "formControl",
+        required: false,
         maxLength: 5,
       },
     });
@@ -490,6 +539,7 @@ describe("makeForm()", () => {
     const formGroup = makeFormFromProperties({
       age: {
         type: "formControl",
+        required: false,
         minimum: 5,
       },
     });
@@ -509,6 +559,7 @@ describe("makeForm()", () => {
     const formGroup = makeFormFromProperties({
       age: {
         type: "formControl",
+        required: false,
         maximum: 5,
       },
     });
