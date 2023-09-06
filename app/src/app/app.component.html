@@ -1,16 +1,3 @@
-<form [formGroup]="registerCustomerForm" (ngSubmit)="submit(registerCustomerForm.value)">
-
-  <div formGroupName="user">
-    <mat-form-field>
-      <mat-label>Username</mat-label>
-      <input matInput formControlName="username"/>
-    </mat-form-field>
-
-    <mat-form-field>
-      <mat-label>Email</mat-label>
-      <input matInput formControlName="email"/>
-    </mat-form-field>
-  </div>
-
-  <button mat-raised-button type="submit" [disabled]="registerCustomerForm.invalid">Submits</button>
-</form>
+<div style="padding: 2rem">
+  <app-customer-form  (onSubmit)="submit($event)" [customer]="customerService.customer()"></app-customer-form>
+</div>

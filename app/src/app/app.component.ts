@@ -1,47 +1,23 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
-import { makeJoiForm, makeZodForm } from '@declanprice/ngx-make-form';
+import { ICustomer } from './models/Customer';
 
-import { z } from 'zod';
-import joi from 'joi';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CustomerService } from './services/customer.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
-  registerCustomerForm = makeZodForm(
-    z.object({
-      user: z.object({
-        username: z.string(),
-        email: z.string(),
-      }),
-    })
-  );
+export class AppComponent implements OnInit {
+  constructor(public customerService: CustomerService) {}
 
-  // registerCustomerForm = makeJoiForm(
-  //   joi.object({
-  //     user: joi.object({
-  //       username: joi.string().required(),
-  //       email: joi.string().required(),
-  //     }),
-  //   })
-  // );
-
-  // registerCustomerForm: FormGroup;
-
-  constructor(public fb: FormBuilder) {
-    // this.registerCustomerForm = this.fb.group({
-    //   user: this.fb.group({
-    //     username: ['', [Validators.required]],
-    //     email: ['', []],
-    //   }),
-    // });
+  ngOnInit() {
+    this.customerService.fetch();
   }
 
-  submit(value: any) {
-    console.log(value);
+  submit(value: ICustomer) {
+    console.log('submitted customer form', value);
   }
 }
