@@ -1,4 +1,4 @@
-import { makeZodForm } from '@declanprice/ngx-make-form';
+import { makeZodForm } from '@declanprice/ngx-make-zod-form';
 
 import {
   ChangeDetectionStrategy,

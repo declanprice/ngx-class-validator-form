@@ -1,5 +1,5 @@
 import { CustomerAddressFieldComponent } from './customer-address-field.component';
-import { render } from '@testing-library/angular';
+import { fireEvent, render } from '@testing-library/angular';
 import {
   ControlContainer,
   FormControl,
@@ -10,15 +10,12 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
-import userEvent from '@testing-library/user-event';
 
 describe('CustomerAddressFieldComponent', () => {
   let addressForm: FormGroup;
   let addressFormDirective: FormGroupDirective;
 
   beforeEach(() => {
-    userEvent.setup();
-
     addressForm = new FormGroup({
       addressLine1: new FormControl(''),
       addressLine2: new FormControl(''),
@@ -29,6 +26,22 @@ describe('CustomerAddressFieldComponent', () => {
     addressFormDirective = new FormGroupDirective([], []);
 
     addressFormDirective.form = addressForm;
+  });
+
+  it('should have address heading', async () => {
+    const { getByRole } = await render(CustomerAddressFieldComponent, {
+      imports: [
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatButtonModule,
+        MatInputModule,
+      ],
+      providers: [
+        { provide: ControlContainer, useValue: addressFormDirective },
+      ],
+    });
+
+    expect(getByRole('heading', { name: 'Address' })).toBeInTheDocument();
   });
 
   it('should have address form fields', async () => {
@@ -47,7 +60,6 @@ describe('CustomerAddressFieldComponent', () => {
       }
     );
 
-    expect(getByText('Address')).toBeInTheDocument();
     expect(getByLabelText('Address Line 1')).toBeInTheDocument();
     expect(getByLabelText('Address Line 2')).toBeInTheDocument();
     expect(getByLabelText('City')).toBeInTheDocument();
@@ -99,10 +111,10 @@ describe('CustomerAddressFieldComponent', () => {
     const cityInput = getByLabelText('City');
     const postcodeInput = getByLabelText('Postcode');
 
-    await userEvent.type(addressLine1Input, '1/1');
-    await userEvent.type(addressLine2Input, '955 Test Road');
-    await userEvent.type(cityInput, 'Glasgow');
-    await userEvent.type(postcodeInput, 'G345QW');
+    fireEvent.change(addressLine1Input, { target: { value: '1/1' } });
+    fireEvent.change(addressLine2Input, { target: { value: '955 Test Road' } });
+    fireEvent.change(cityInput, { target: { value: 'Glasgow' } });
+    fireEvent.change(postcodeInput, { target: { value: 'G345QW' } });
 
     expect(addressLine1Input).toHaveValue('1/1');
     expect(addressLine2Input).toHaveValue('955 Test Road');

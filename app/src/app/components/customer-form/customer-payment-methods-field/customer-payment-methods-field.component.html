@@ -1,9 +1,9 @@
-<ng-container [formGroup]="formArray">
+<ng-container>
   <h3> Payment Methods </h3>
 
   <button mat-raised-button (click)="add()" style="margin-bottom: 1rem;">Add New</button>
 
-  <ng-container *ngFor="let control of formArray.controls; let i = index" [formGroupName]="i">
+  <ng-container *ngFor="let paymentMethodForm of formArray.controls; let i = index" [formGroup]="paymentMethodForm">
     <div>
       <mat-form-field style="margin-right: 1rem">
         <mat-label>Sort</mat-label>

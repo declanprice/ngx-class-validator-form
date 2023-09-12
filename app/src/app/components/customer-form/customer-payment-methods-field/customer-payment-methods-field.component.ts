@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ControlContainer, FormArray } from '@angular/forms';
+import { ControlContainer, FormArray, FormGroup } from '@angular/forms';
 import { CustomerPaymentMethod } from '../../../models/Customer';
-import { makeZodForm } from '@declanprice/ngx-make-form';
+import { makeZodForm } from '@declanprice/ngx-make-zod-form';
 
 @Component({
   selector: 'app-customer-payment-methods-field',
@@ -12,15 +12,15 @@ import { makeZodForm } from '@declanprice/ngx-make-form';
 export class CustomerPaymentMethodsFieldComponent {
   constructor(public controlContainer: ControlContainer) {}
 
-  get formArray() {
-    return this.controlContainer.control as any;
+  get formArray(): FormArray<FormGroup> {
+    return this.controlContainer.control as FormArray<FormGroup>;
   }
 
   add() {
-    (this.formArray as FormArray).push(makeZodForm(CustomerPaymentMethod));
+    this.formArray.push(makeZodForm(CustomerPaymentMethod));
   }
 
   remove(index: number) {
-    (this.formArray as FormArray).removeAt(index);
+    this.formArray.removeAt(index);
   }
 }

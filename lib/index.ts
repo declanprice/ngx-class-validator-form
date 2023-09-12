@@ -5,4 +5,4 @@ export {
 
 export { makeControl } from "./src/makeControl";
 
-export { makeJoiForm, makeZodForm } from "./src/makeForm";
+export { makeZodForm } from "./src/makeForm";

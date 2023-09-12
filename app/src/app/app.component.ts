@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit,
+} from '@angular/core';
 
 import { ICustomer } from './models/Customer';
 
@@ -11,10 +16,14 @@ import { CustomerService } from './services/customer.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements OnInit {
+  @Input() fetchOnInit: boolean = true;
+
   constructor(public customerService: CustomerService) {}
 
   ngOnInit() {
-    this.customerService.fetch();
+    if (this.fetchOnInit) {
+      this.customerService.fetch();
+    }
   }
 
   submit(value: ICustomer) {
