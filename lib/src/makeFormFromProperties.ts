@@ -96,7 +96,7 @@ export const makeFormFromProperties = (
       ) {
         const nestedFormArray = new FormArray<any>([]);
 
-        const arrayData = data ? data[propertyName] || undefined : undefined;
+        const arrayData = data ? data[propertyName] : undefined;
 
         if (Array.isArray(arrayData)) {
           for (const arrayItem of arrayData) {

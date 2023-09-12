@@ -430,7 +430,7 @@ describe("makeForm()", () => {
     });
   });
 
-  it("should support array value as FormControl instead of FormArray", () => {
+  it("should support object array value as FormControl instead of FormArray", () => {
     const formGroup = makeFormFromProperties(
       {
         paymentMethods: {
@@ -477,6 +477,28 @@ describe("makeForm()", () => {
           account: 2,
         },
       ],
+    });
+  });
+
+  it("should support primitive array value as FormControl instead of FormArray", () => {
+    const formGroup = makeFormFromProperties(
+      {
+        accounts: {
+          type: "formControl",
+          required: false,
+        },
+      },
+      {
+        accounts: [1, 2, 3],
+      }
+    );
+
+    const accounts = formGroup.get("accounts") as FormControl;
+    expect(accounts).toBeTruthy();
+    expect((accounts as any)["length"]).toBeUndefined();
+    expect(accounts.value).toEqual([1, 2, 3]);
+    expect(formGroup.value).toEqual({
+      accounts: [1, 2, 3],
     });
   });
 

@@ -13,6 +13,13 @@ describe("zodToProperties()", () => {
     address: z.object({
       addressLine1: z.string(),
     }),
+    address2: z
+      .object({
+        nestedAddress: z.object({
+          addressLine1: z.string(),
+        }),
+      })
+      .optional(),
     skills: z.array(z.string()),
     skills2: z.array(z.string().min(5).max(5)),
     paymentMethods: z
@@ -57,6 +64,22 @@ describe("zodToProperties()", () => {
           },
         },
         required: true,
+      },
+      address2: {
+        type: "formGroup",
+        required: false,
+        properties: {
+          nestedAddress: {
+            type: "formGroup",
+            required: true,
+            properties: {
+              addressLine1: {
+                type: "formControl",
+                required: true,
+              },
+            },
+          },
+        },
       },
       skills: {
         type: "formArray",

@@ -2,7 +2,13 @@ import { makeZodForm } from "./makeForm";
 import { FormArray } from "@angular/forms";
 import { z } from "zod";
 
+import * as makeFormFromProperties from "../src/makeFormFromProperties";
+
 describe("makeZodForm()", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   const schema = z.object({
     name: z.string().min(5).max(10),
     dateOfBirth: z.string().optional(),
@@ -71,5 +77,40 @@ describe("makeZodForm()", () => {
     const formGroup = makeZodForm(schema, data);
 
     expect(formGroup.value).toEqual(data);
+  });
+
+  it("should throw an error if fail to make zod form", () => {
+    const makeFormSpy = jest
+      .spyOn(makeFormFromProperties, "makeFormFromProperties")
+      .mockImplementation(() => {
+        throw new Error("something went wrong");
+      });
+
+    const data = {
+      name: "Declan",
+      dateOfBirth: "1999-04-01",
+      age: 22,
+      isMember: true,
+      address: {
+        addressLine1: "address line 1",
+      },
+      skills: ["1", "2", "3"],
+      paymentMethods: [
+        {
+          sort: "123",
+          account: 123,
+          ibans: [],
+        },
+        {
+          sort: "123",
+          account: 123,
+          ibans: [],
+        },
+      ],
+    };
+
+    expect(() => {
+      makeZodForm(schema, data);
+    }).toThrow("failed to make zod form");
   });
 });
